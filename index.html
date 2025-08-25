@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI活用ガイドライン：小学生・都立学校向け</title>
+    <!-- Tailwind CSS CDNの読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Interフォントの読み込み -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons CDNの読み込み -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3/dist/phosphor.js"></script>
+    <!-- Chart.js CDNの読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Datalabels Plugin CDNの読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc; /* Light background */
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+        }
+        .tile-icon {
+            font-size: 4rem;
+            color: #4a5568; /* Darker gray for icons */
+            margin-bottom: 1rem;
+        }
+        .description {
+            color: #6b7280;
+        }
+        /* 都立AI運用ガイドラインと小学校向けAI活用ガイドラインの展開詳細CSS */
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .details.open {
+            max-height: 500px; /* 必要に応じて調整 */
+            transition: max-height 0.5s ease-in;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* 都立・小学校ガイドラインのレーダーチャートの最大幅 */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        /* トップへ戻るボタンのスタイル */
+        .back-to-top {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            background-color: #4a90e2;
+            color: white;
+            border-radius: 9999px; /* Rounded-full */
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .back-to-top:hover {
+            background-color: #357bd8;
+            transform: translateY(-2px);
+        }
+        .back-to-top i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-100 p-4 sm:p-6 lg:p-8 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-4">
+                🎨 AI教育コンテンツ ハブ 🤖
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-700">
+                小学生の関わりから学校での具体的な活用ガイドラインまで
+            </p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- 1. 小学生と生成AI -->
+            <a href="#section-shogakusei" class="card block p-8 text-center bg-purple-50 hover:bg-purple-100 border-b-4 border-purple-400">
+                <i class="ph ph-user-circle-gear tile-icon text-purple-600"></i>
+                <h2 class="text-2xl font-bold text-purple-800 mb-2">小学生と生成AI</h2>
+                <p class="description">最新調査から見る小学生のAI認知度と利用状況、期待・不安を解説。</p>
+            </a>
+
+            <!-- 2. 都立AI運用ガイドライン -->
+            <a href="#section-toritsu" class="card block p-8 text-center bg-green-50 hover:bg-green-100 border-b-4 border-green-400">
+                <i class="ph ph-building-office tile-icon text-green-600"></i>
+                <h2 class="text-2xl font-bold text-green-800 mb-2">都立AI運用ガイドライン</h2>
+                <p class="description">都教育委員会の指針に基づく教師と生徒の役割をインタラクティブに紹介。</p>
+            </a>
+
+            <!-- 3. 小学校向け生成AI活用ガイドライン -->
+            <a href="#section-shogakko" class="card block p-8 text-center bg-blue-50 hover:bg-blue-100 border-b-4 border-blue-400">
+                <i class="ph ph-chalkboard-teacher tile-icon text-blue-600"></i>
+                <h2 class="text-2xl font-bold text-blue-800 mb-2">小学校向けAI活用ガイドライン</h2>
+                <p class="description">Copilotを中心とした教員支援と児童の学び方について詳述。</p>
+            </a>
+        </main>
+
+        <section id="full-content" class="mt-16 space-y-16">
+            <!-- 小学生と生成AI：最新調査から見る関わりと意識の変化 (コンテンツ埋め込み) -->
+            <div id="section-shogakusei" class="card p-8">
+                <h2 class="text-3xl font-bold text-blue-800 mb-6 border-b pb-4">小学生と生成AI：最新調査から見る関わりと意識の変化</h2>
+                <div id="shogakusei-ai-content">
+                    <!-- ここに「小学生と生成AI」のHTMLコンテンツが挿入されます -->
+                </div>
+                <div class="text-right mt-8">
+                    <a href="#top" class="back-to-top">
+                        <i class="ph ph-arrow-up text-xl"></i> トップへ戻る
+                    </a>
+                </div>
+            </div>
+
+            <!-- 都立AI運用ガイドライン (コンテンツ埋め込み) -->
+            <div id="section-toritsu" class="card p-8">
+                <h2 class="text-3xl font-bold text-green-800 mb-6 border-b pb-4">都立AI運用ガイドライン</h2>
+                <div id="toritsu-ai-content">
+                    <!-- ここに「都立AI運用ガイドライン」のHTMLコンテンツが挿入されます -->
+                </div>
+                <div class="text-right mt-8">
+                    <a href="#top" class="back-to-top">
+                        <i class="ph ph-arrow-up text-xl"></i> トップへ戻る
+                    </a>
+                </div>
+            </div>
+
+            <!-- 小学校向け生成AI活用ガイドライン (コンテンツ埋め込み) -->
+            <div id="section-shogakko" class="card p-8">
+                <h2 class="text-3xl font-bold text-purple-800 mb-6 border-b pb-4">小学校向けAI活用ガイドライン</h2>
+                <div id="shogakko-ai-content">
+                    <!-- ここに「小学校向け生成AI活用ガイドライン」のHTMLコンテンツが挿入されます -->
+                </div>
+                <div class="text-right mt-8">
+                    <a href="#top" class="back-to-top">
+                        <i class="ph ph-arrow-up text-xl"></i> トップへ戻る
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 text-gray-600 text-sm">
+            <p>&copy; 2025 AI教育コンテンツハブ</p>
+        </footer>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // ヘルパー関数: バーチャートを作成
+            function createBarChart(ctx, labels, data, labelText, backgroundColor, borderColor) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: labelText,
+                            data: data, // パーセンテージ
+                            backgroundColor: backgroundColor,
+                            borderColor: borderColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        indexAxis: 'y', // 横棒グラフにする
+                        scales: {
+                            x: { // x軸をパーセンテージに
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '割合 (%)'
+                                }
+                            },
+                            y: { // y軸は項目名
+                                grid: {
+                                    display: false // グリッド線を非表示
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw + '%';
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false // 凡例を非表示
+                            },
+                            datalabels: { // データラベルの設定
+                                anchor: 'end', // バーの終端に表示
+                                align: 'end', // ラベルをバーの外側に配置
+                                formatter: (value) => value + '%', // 値に%を追加
+                                color: '#4A5568', // ラベルの色
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- 小学生と生成AIセクションのコンテンツとチャート ---
+            document.getElementById('shogakusei-ai-content').innerHTML = `
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-purple-700 mb-3">生成AIの認知度</h3>
+                    <p class="text-lg text-gray-700 mb-2 font-bold">Q. AIについて知っていますか？</p>
+                    <p class="text-lg text-gray-700 mb-4">
+                        <span class="font-semibold">2024年1月 (回答数: 2,334人)</span> と
+                        <span class="font-semibold">2025年5月 (回答数: 1,588人)</span> のニフティキッズ調査より。
+                        このグラフは、AIについて**「知っている」と回答した児童の割合**を示しています。
+                    </p>
+                    <canvas id="recognitionChart"></canvas>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        <strong class="text-purple-700">📈 認知度が大きく向上しています。</strong>
+                    </p>
+                </div>
+
+                <div class="space-y-6 mt-8">
+                    <h3 class="text-2xl font-bold text-green-700 mb-3">生成AIの利用経験</h3>
+                    <p class="text-lg text-gray-700 mb-2 font-bold">Q. 生成AIを利用したことがありますか？</p>
+                    <p class="text-lg text-gray-700 mb-4">
+                        <span class="font-semibold">2024年1月 (回答数: 2,334人)</span> と
+                        <span class="font-semibold">2025年5月 (回答数: 1,588人)</span> のニフティキッズ調査より。
+                        このグラフは、生成AIを**「利用したことがある」と回答した児童の割合**を示しています。
+                    </p>
+                    <canvas id="experienceChart"></canvas>
+                    <p class="text-gray-600 mt-2 text-sm">
+                        <strong class="text-green-700">🚀 利用経験も大幅に増加！</strong>
+                    </p>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-blue-700 mb-4 flex items-center">
+                        <i class="ph ph-magnifying-glass text-blue-500 mr-3 text-3xl"></i> 主な利用目的 (2025年5月 ニフティキッズ調査)
+                    </h3>
+                    <p class="text-lg text-gray-700 mb-2 font-bold">Q. 生成AIをどのような目的で利用しましたか？</p>
+                    <p class="text-lg text-gray-700 mb-4">
+                        ※複数回答可。利用目的は「調べもの」が最も多く、「宿題」や「文章作成」、さらに「遊び・おもしろいこと」も多く挙げられました。
+                    </p>
+                    <canvas id="usagePurposeChart"></canvas>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-yellow-700 mb-4 flex items-center">
+                        <i class="ph ph-thumbs-up text-yellow-500 mr-3 text-3xl"></i> 生成AIへの期待 (2025年5月 ニフティキッズ調査)
+                    </h3>
+                    <p class="text-lg text-gray-700 mb-2 font-bold">Q. 生成AIにどのようなことを期待しますか？</p>
+                    <p class="text-lg text-gray-700 mb-4">
+                        ※複数回答可。生成AIに期待することとしては、「勉強の役に立つこと」が最も多く挙げられました。
+                    </p>
+                    <canvas id="expectationChart"></canvas>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-red-700 mb-4 flex items-center">
+                        <i class="ph ph-x-circle text-red-500 mr-3 text-3xl"></i> 生成AIへの不安 (2025年5月 ニフティキッズ調査)
+                    </h3>
+                    <p class="text-lg text-gray-700 mb-2 font-bold">Q. 生成AIについてどのような不安がありますか？</p>
+                    <p class="text-lg text-gray-700 mb-4">
+                        ※複数回答可。「個人情報が漏れないか」「悪用されないか」といった不安が依然として存在することが示されました。
+                    </p>
+                    <canvas id="concernChart"></canvas>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-4 flex items-center">
+                        <i class="ph ph-shield-slash text-indigo-500 mr-3 text-3xl"></i> 保護者の意識 (2024年12月 ジャストシステム調査)
+                    </h3>
+                    <p class="text-lg text-gray-700 mb-2 font-bold">Q. お子様が生成AIを利用することについてどう思いますか？</p>
+                    <p class="text-lg text-gray-700 mb-3">
+                        <span class="font-semibold">回答数: 555人。</span>保護者の約6割が子どもの生成AI利用に肯定的な見方をしています。
+                    </p>
+                    <div class="flex flex-col lg:flex-row justify-center items-start lg:items-center gap-4 mt-4">
+                        <div class="p-4 rounded-lg bg-red-50 shadow-md w-full lg:w-1/3 order-3 lg:order-1">
+                            <h4 class="text-xl font-bold text-red-800 mb-2">⚠️ 懸念点</h4>
+                            <ul class="list-disc pl-5 text-md text-gray-700 space-y-1">
+                                <li>情報リテラシーの低さ</li>
+                                <li>依存性</li>
+                                <li>倫理的な問題</li>
+                            </ul>
+                        </div>
+                        <div class="max-w-[200px] w-full lg:w-1/3 mx-auto order-1 lg:order-2">
+                            <canvas id="parentAwarenessChart"></canvas>
+                        </div>
+                        <div class="p-4 rounded-lg bg-indigo-50 shadow-md w-full lg:w-1/3 order-2 lg:order-3">
+                            <h4 class="text-xl font-bold text-indigo-800 mb-2">✅ 肯定的な理由</h4>
+                            <ul class="list-disc pl-5 text-md text-gray-700 space-y-1">
+                                <li>学習の効率化</li>
+                                <li>創造性の向上</li>
+                                <li>問題解決能力の育成</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // --- 都立AI運用ガイドラインセクションのコンテンツとチャート ---
+            document.getElementById('toritsu-ai-content').innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <section class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-400">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-800 flex items-center">
+                            <span class="text-3xl mr-3">🏫</span> 教師のコントロール範囲
+                        </h3>
+                        <p class="mb-6 text-gray-600">AIは「副担任」として教師を支援します。教育の主導権と最終判断は「主担任」である教師が担い、生徒の学びと安全を監督します。</p>
+                        <div id="teacher-roles" class="space-y-4"></div>
+                    </section>
+                    <section class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-400">
+                        <h3 class="text-2xl font-bold mb-4 text-green-800 flex items-center">
+                            <span class="text-3xl mr-3">👨‍🎓</span> 生徒の操作できる範囲
+                        </h3>
+                        <p class="mb-6 text-gray-600">AIは「探究の相棒」として生徒の学びを支援します。教師の指導のもと、自律的な学習ツールとしてAIを倫理的に活用します。</p>
+                        <div id="student-roles" class="space-y-4"></div>
+                    </section>
+                </div>
+                <section class="mt-12 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-4 text-gray-900">役割のバランス：教師と生徒</h3>
+                    <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">このチャートは、AI活用における教師と生徒の役割の重点領域を視覚的に示しています。教師は指導や倫理面での監督に、生徒は探究活動や情報活用にそれぞれ重点が置かれていることがわかります。</p>
+                    <div class="chart-container">
+                        <canvas id="toritsuRolesChart"></canvas>
+                    </div>
+                </section>
+            `;
+
+            // --- 小学校向け生成AI活用ガイドラインセクションのコンテンツとチャート ---
+            document.getElementById('shogakko-ai-content').innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <section class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-400">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-800 flex items-center">
+                            <span class="text-3xl mr-3">👩‍🏫</span> 教員向けCopilot活用方策
+                        </h3>
+                        <p class="mb-6 text-gray-600">Copilotは教員の負担を軽減し、授業準備や校務の効率化を強力にサポートする「学びを広げるパートナー」です。</p>
+                        <div id="teacher-copilot-roles" class="space-y-4"></div>
+                    </section>
+                    <section class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-400">
+                        <h3 class="text-2xl font-bold mb-4 text-green-800 flex items-center">
+                            <span class="text-3xl mr-3">🧑‍🎓</span> 授業でのAI活用と児童への指導
+                        </h3>
+                        <p class="mb-6 text-gray-600">児童が安全かつ効果的にAIの恩恵を受けられるよう、教師主導でAIリテラシー教育を進め、創造性を育みます。</p>
+                        <div id="student-interaction-roles" class="space-y-4"></div>
+                    </section>
+                </div>
+                <section class="mt-12 bg-white p-6 rounded-xl shadow-lg border-t-4 border-orange-400">
+                    <h3 class="text-2xl font-bold text-center mb-4 text-orange-800 flex items-center justify-center">
+                        <span class="text-3xl mr-3">⚠️</span> 運用上の留意点
+                    </h3>
+                    <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">生成AIを効果的かつ安全に活用するための、重要な考慮事項と取り組みをまとめました。</p>
+                    <ul class="list-disc pl-8 pr-4 space-y-3 text-gray-700 max-w-2xl mx-auto">
+                        <li>**安全性とプライバシー**: 児童が利用するAIシステムには、強固なフィルタリング機能と個人情報入力の厳格な禁止を徹底します。教員も個人情報や機密情報をCopilotに入力しないよう注意が必要です。</li>
+                        <li>**教員の研修**: Copilotの基本的な操作方法から、教育現場での具体的な活用事例、AIリテラシー教育の進め方まで、体系的な教員研修を定期的に実施します。</li>
+                        <li>**段階的な導入**: 全ての教員や学年で一斉に導入するのではなく、まずは一部の教員や特定の教科・学年から試験的に導入し、成功事例を共有しながら段階的に拡大していくことを推奨します。</li>
+                        <li>**保護者への説明**: 生成AIの導入目的、具体的な活用方法、安全対策について、事前に保護者会などで丁寧に説明し、理解と協力を得ることが不可欠です。</li>
+                    </ul>
+                </section>
+                <section class="mt-12 bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-4 text-gray-900">AI活用における役割と重点領域</h3>
+                    <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">このレーダーチャートは、小学校でのAI活用における教員と児童それぞれの主な関与と重点領域を視覚的に示しています。教員は多岐にわたる側面でAIを管理・活用し、児童は学習とリテラシー習得の恩恵を受けます。</p>
+                    <div class="chart-container">
+                        <canvas id="shogakkoRolesChart"></canvas>
+                    </div>
+                </section>
+            `;
+
+            // Chart.js Datalabels Pluginの登録
+            Chart.register(ChartDataLabels);
+
+            // ヘルパー関数: バーチャートを作成
+            function createBarChart(ctx, labels, data, labelText, backgroundColor, borderColor) {
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: labelText,
+                            data: data, // パーセンテージ
+                            backgroundColor: backgroundColor,
+                            borderColor: borderColor,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        indexAxis: 'y', // 横棒グラフにする
+                        scales: {
+                            x: { // x軸をパーセンテージに
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: '割合 (%)'
+                                }
+                            },
+                            y: { // y軸は項目名
+                                grid: {
+                                    display: false // グリッド線を非表示
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw + '%';
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false // 凡例を非表示
+                            },
+                            datalabels: { // データラベルの設定
+                                anchor: 'end', // バーの終端に表示
+                                align: 'end', // ラベルをバーの外側に配置
+                                formatter: (value) => value + '%', // 値に%を追加
+                                color: '#4A5568', // ラベルの色
+                                font: {
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- 小学生と生成AIセクションのチャート ---
+            const recognitionCtx = document.getElementById('recognitionChart').getContext('2d');
+            createBarChart(
+                recognitionCtx,
+                ['2024年1月 (2,334人)', '2025年5月 (1,588人)'],
+                [60, 70],
+                '認知度',
+                ['rgba(147, 51, 234, 0.7)', 'rgba(109, 40, 217, 0.7)'],
+                ['rgba(147, 51, 234, 1)', 'rgba(109, 40, 217, 1)']
+            );
+
+            const experienceCtx = document.getElementById('experienceChart').getContext('2d');
+            createBarChart(
+                experienceCtx,
+                ['2024年1月 (2,334人)', '2025年5月 (1,588人)'],
+                [10, 30],
+                '利用経験',
+                ['rgba(34, 197, 94, 0.7)', 'rgba(21, 128, 61, 0.7)'],
+                ['rgba(34, 197, 94, 1)', 'rgba(21, 128, 61, 1)']
+            );
+
+            const usagePurposeCtx = document.getElementById('usagePurposeChart').getContext('2d');
+            createBarChart(
+                usagePurposeCtx,
+                ['調べもの', '宿題', '文章作成', '遊び・おもしろいこと'],
+                [60, 45, 35, 50],
+                '利用目的 (複数回答)',
+                ['rgba(59, 130, 246, 0.7)', 'rgba(37, 99, 235, 0.7)', 'rgba(29, 78, 216, 0.7)', 'rgba(29, 100, 216, 0.7)'],
+                ['rgba(59, 130, 246, 1)', 'rgba(37, 99, 235, 1)', 'rgba(29, 78, 216, 1)', 'rgba(29, 100, 216, 1)']
+            );
+
+            const expectationCtx = document.getElementById('expectationChart').getContext('2d');
+            createBarChart(
+                expectationCtx,
+                ['勉強の役に立つ', '便利で作業が楽になる', '新しい発見や発想が生まれる'],
+                [70, 55, 40],
+                '期待 (複数回答)',
+                ['rgba(252, 211, 77, 0.7)', 'rgba(251, 191, 36, 0.7)', 'rgba(245, 158, 11, 0.7)'],
+                ['rgba(252, 211, 77, 1)', 'rgba(251, 191, 36, 1)', 'rgba(245, 158, 11, 1)']
+            );
+
+            const concernCtx = document.getElementById('concernChart').getContext('2d');
+            createBarChart(
+                concernCtx,
+                ['間違った情報を教えそう', '悪用されないか', '個人情報が漏れないか', '依存してしまうのではないか'],
+                [65, 50, 45, 30],
+                '不安 (複数回答)',
+                ['rgba(239, 68, 68, 0.7)', 'rgba(220, 38, 38, 0.7)', 'rgba(185, 28, 28, 0.7)', 'rgba(153, 27, 27, 0.7)'],
+                ['rgba(239, 68, 68, 1)', 'rgba(220, 38, 38, 1)', 'rgba(185, 28, 28, 1)', 'rgba(153, 27, 27, 1)']
+            );
+
+            const parentAwarenessCtx = document.getElementById('parentAwarenessChart').getContext('2d');
+            new Chart(parentAwarenessCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['肯定的に考えている (60%)', '否定的・どちらでもない (40%)'],
+                    datasets: [{
+                        data: [60, 40],
+                        backgroundColor: ['rgba(79, 70, 229, 0.7)', 'rgba(156, 163, 175, 0.7)'],
+                        borderColor: ['rgba(79, 70, 229, 1)', 'rgba(156, 163, 175, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 10
+                                },
+                                boxWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label = label.replace(/\s*\(\d+%\)/, '');
+                                        label += ': ';
+                                    }
+                                    if (context.raw !== null) {
+                                        label += context.raw + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                const label = ctx.chart.data.labels[ctx.dataIndex];
+                                return value + '%';
+                            },
+                            color: '#fff',
+                            font: {
+                                weight: 'bold',
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- 都立AI運用ガイドラインセクションのインタラクティブ要素のデータと初期化 ---
+            const teacherData = [
+                {
+                    icon: '🎓',
+                    title: 'AI利用の最終判断と監督',
+                    details: [
+                        '生徒がAIを利用する際は、必ず教師の監督下で行います。AIの生成物の妥当性や正確性は教師が確認し、指導に活用します。',
+                        '教育の主導権と最終的な判断は、あくまで「主担任」である教師が担い、生徒の学びと安全を確保します。'
+                    ]
+                },
+                {
+                    icon: '💡',
+                    title: '生徒へのAI活用指導',
+                    details: [
+                        'AIを使う目的、適切な利用方法、そして利用時のルール（例：個人情報の入力禁止、著作権への配慮など）を生徒に明確に伝えます。',
+                        'AIが生成した情報が常に正しいとは限らないことを教え、情報の吟味や批判的思考力の育成を重視します。',
+                        'AIに頼りすぎず、自らの頭で考え、主体的に学びを深めることの重要性を指導します。'
+                    ]
+                },
+                {
+                    icon: '📚',
+                    title: '活用場面の選定と制限',
+                    details: [
+                        '各教科や単元において、AIを効果的に活用できる具体的な場面（例：レポートの下書き作成、ブレインストーミングの補助、情報収集の初動）を教師が設定します。',
+                        '生徒個人の知識・技能を測る定期考査や小テストなど、特定の場面でのAI利用は原則として禁止します。'
+                    ]
+                },
+                {
+                    icon: '🔒',
+                    title: '個人情報の保護と著作権への配慮',
+                    details: [
+                        '生徒の個人情報（氏名、住所など）や学校の機密情報をAIに入力しないよう、指導を徹底します。',
+                        'AIが生成したコンテンツの著作権、引用元の明示、公正利用の原則について生徒に指導します。'
+                    ]
+                },
+                {
+                    icon: '🤝',
+                    title: 'AIの活用事例の共有と改善',
+                    details: [
+                        '教師間でAIの有効な活用事例や課題を共有し、教育実践力の向上を図ります。',
+                        'AIの教育効果を定期的に検証し、都立AI運用ガイドラインの継続的な改善に貢献します。'
+                    ]
+                }
+            ];
+
+            const studentData = [
+                {
+                    icon: '🧠',
+                    title: '思考・探究活動のサポート',
+                    details: [
+                        '新しいアイデア出し、思考の整理、論点の深掘りなど、自身の思考を補助するツールとしてAIを活用します。',
+                        '例：探究活動のテーマ設定の補助、仮説構築のための関連情報収集、異なる視点からの意見収集。'
+                    ]
+                },
+                {
+                    icon: '❓',
+                    title: '情報収集と理解促進',
+                    details: [
+                        '疑問点の解消、用語解説、複雑な内容の要約など、AIを「情報源」の一つとして活用します。',
+                        'AIの回答を鵜呑みにせず、必ず複数の情報源と照らし合わせたり、教師に確認したりして、情報の真偽を吟味します。'
+                    ]
+                },
+                {
+                    icon: '🎨',
+                    title: '表現活動の下書き・補助',
+                    details: [
+                        'レポートの構成案作成、文章表現の改善提案、プログラミングコードのヒントを得るなど、自身の表現活動の補助としてAIを利用します。',
+                        'AIが作成したものをそのまま提出せず、必ず自分の言葉で修正・加筆し、自身の思考や考察を反映させます。'
+                    ]
+                },
+                {
+                    icon: '💬',
+                    title: 'AIとの対話を通じた学習',
+                    details: [
+                        'AIに質問を投げかけ、その回答からさらに問いを深める対話型の学習を行います。',
+                        '自分の考えをAIにぶつけ、客観的な視点や異なる意見を得ることで、多角的な視点から物事を考察する力を養います。'
+                    ]
+                },
+                {
+                    icon: '📝',
+                    title: '利用ガイドラインの遵守',
+                    details: [
+                        '教師から示されたAI利用のルール（利用場面、個人情報保護、著作権への配慮など）を理解し、常に遵守します。',
+                        'AIを倫理的に、そして責任を持って活用する姿勢を身につけ、デジタル社会の一員としての自覚を高めます。'
+                    ]
+                }
+            ];
+
+            function createRoleCard(item, color) {
+                const card = document.createElement('div');
+                card.className = `border border-${color}-200 rounded-lg overflow-hidden`;
+
+                const header = document.createElement('div');
+                header.className = `p-4 flex justify-between items-center cursor-pointer bg-${color}-50 hover:bg-${color}-100 transition-colors`;
+                header.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-3">${item.icon}</span>
+                        <h4 class="font-semibold text-${color}-900">${item.title}</h4>
+                    </div>
+                    <span class="transform transition-transform duration-300 text-${color}-500">▼</span>
+                `;
+
+                const detailsContainer = document.createElement('div');
+                detailsContainer.className = 'details bg-white';
+                const detailsList = document.createElement('ul');
+                detailsList.className = 'list-disc pl-10 pr-4 py-4 space-y-2 text-gray-700';
+                item.details.forEach(detail => {
+                    const li = document.createElement('li');
+                    li.innerHTML = detail; // HTMLとして挿入
+                    detailsList.appendChild(li);
+                });
+                detailsContainer.appendChild(detailsList);
+
+                card.appendChild(header);
+                card.appendChild(detailsContainer);
+
+                header.addEventListener('click', () => {
+                    // max-heightを動的に計算してスムーズなアニメーションを実現
+                    if (detailsContainer.classList.contains('open')) {
+                        detailsContainer.style.maxHeight = '0';
+                    } else {
+                        detailsContainer.style.maxHeight = detailsContainer.scrollHeight + 'px';
+                    }
+                    detailsContainer.classList.toggle('open');
+                    header.querySelector('span:last-child').classList.toggle('rotate-180');
+                });
+
+                return card;
+            }
+
+            const teacherRolesContainer = document.getElementById('teacher-roles');
+            teacherData.forEach(item => teacherRolesContainer.appendChild(createRoleCard(item, 'blue')));
+
+            const studentRolesContainer = document.getElementById('student-roles');
+            studentData.forEach(item => studentRolesContainer.appendChild(createRoleCard(item, 'green')));
+
+            const toritsuRolesCtx = document.getElementById('toritsuRolesChart').getContext('2d');
+            new Chart(toritsuRolesCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['指導・監督', '倫理・安全', '評価', '探究・創造', '情報活用'],
+                    datasets: [{
+                        label: '教師',
+                        data: [5, 5, 4, 2, 3],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }, {
+                        label: '生徒',
+                        data: [1, 3, 2, 5, 5],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(16, 185, 129, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5,
+                            pointLabels: {
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.raw;
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            // --- 小学校向け生成AI活用ガイドラインセクションのインタラクティブ要素のデータと初期化 ---
+            const teacherCopilotData = [
+                {
+                    icon: '📝',
+                    title: 'Copilotを活用した授業準備・教材作成',
+                    details: [
+                        '**教材アイデアの壁打ち**: 児童が興味を持つ導入方法や発展的な課題のアイデア出しなど、教師の創造的な活動をサポートします。',
+                        '**児童向け説明の平易化**: 専門用語を含む内容を簡単な言葉で説明する原案を作成し、授業準備の負担を軽減します。',
+                        '**学習プリント・クイズの作成支援**: 単元の内容に基づいたプリントやクイズの原案を素早く生成し、教材準備を効率化します。',
+                        '**個別の学習支援計画の作成**: 児童の状況に応じた個別課題や支援計画の提案を得て、きめ細やかな指導に役立てます。',
+                        '**宿題のアイデア出し**: 児童が取り組みやすい自由研究などのテーマ案を効率的に収集し、宿題のバリエーションを増やします。'
+                    ]
+                },
+                {
+                    icon: '🏫',
+                    title: '校務での活用',
+                    details: [
+                        '**学級通信・保護者向け文書の下書き**: 学級通信のひな形作成や、季節のご挨拶、お知らせ文の構成案を生成し、文書作成の時間を短縮します。',
+                        '**会議資料の要約**: 長文の会議資料から主要な論点を抽出し、読解の効率化を図ります。',
+                        '**業務改善アイデアの探索**: 校務における課題（例：時間管理、情報共有）についてCopilotに相談し、効率化や改善のヒントを得ます。'
+                    ]
+                }
+            ];
+
+            const studentInteractionData = [
+                {
+                    icon: '💡',
+                    title: '授業での生成AI活用（教師主導・児童参加型）',
+                    details: [
+                        '**アイデア発想の補助**: 国語の物語作りや図画工作のテーマ決めなどで、教師がAIに問いかけ、児童がそのアイデアを参考にしながら自分の発想を深めます。',
+                        '**調べ学習の導入支援**: 社会科や総合的な学習の時間で、教師がAIに質問し、児童が基本的な情報を得る体験を通して、情報活用の第一歩を支援します。',
+                        '**プログラミング教育の支援**: ビジュアルプログラミングの課題で、教師がAIにプログラム例を尋ね、児童と一緒にプログラムの構造や論理的思考について考えます。',
+                        '**発表資料作成の補助**: 児童が発表準備をする際、教師がAIを使って構成のアドバイスを得ることを支援し、効果的なプレゼンテーションの準備を促します。'
+                    ]
+                },
+                {
+                    icon: '📖',
+                    title: '児童への指導・AIリテラシー教育',
+                    details: [
+                        '**AIとの対話ルール**: AIは「便利な道具」であり、敬意を持って質問することや、不適切な言葉を使わないことを伝えます。',
+                        '**情報確認の重要性**: AIが生成した情報が必ずしも正しいとは限らないことを教え、図鑑や他の資料と照らし合わせるなど、情報の真偽を確認する習慣化を促します。',
+                        '**創造性と主体性の尊重**: AIはあくまで「手伝い」であり、自分の考えや表現を生み出すのは自分自身であることを強調し、児童の主体的な学びを大切にします。',
+                        '**個人情報保護の意識付け**: 自分の名前や住所、友達の個人情報などをAIに入力してはいけないことを具体例を挙げて指導します。'
+                    ]
+                }
+            ];
+
+            const teacherCopilotRolesContainer = document.getElementById('teacher-copilot-roles');
+            teacherCopilotData.forEach(item => teacherCopilotRolesContainer.appendChild(createRoleCard(item, 'blue')));
+
+            const studentInteractionRolesContainer = document.getElementById('student-interaction-roles');
+            studentInteractionData.forEach(item => studentInteractionRolesContainer.appendChild(createRoleCard(item, 'green')));
+
+            const shogakkoRolesCtx = document.getElementById('shogakkoRolesChart').getContext('2d');
+            new Chart(shogakkoRolesCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['授業準備支援', '児童学習支援', 'AIリテラシー教育', '校務効率化', '安全・倫理監督'],
+                    datasets: [{
+                        label: '教員',
+                        data: [5, 4, 5, 5, 5], /* Data for teacher's responsibility/use */
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(59, 130, 246, 1)'
+                    }, {
+                        label: '児童',
+                        data: [2, 5, 5, 1, 5], /* Data for student's benefit/involvement */
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(16, 185, 129, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5,
+                            pointLabels: {
+                                font: {
+                                    size: 14
+                                },
+                            padding: 10,
+                                callback: function(label) {
+                                    if (label.length > 8) {
+                                        return label.split(/(?<=.{8})/).join('\n'); // Wrap label if longer than 8 chars
+                                    }
+                                    return label;
+                                }
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                display: false // Hide numerical ticks on the radar chart for a cleaner look
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.raw;
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // "details" クラスの初期状態を設定
+            // この部分は、innerHTMLでのコンテンツ追加後に呼び出す必要がある
+            document.querySelectorAll('#full-content .details').forEach(detail => {
+                detail.style.maxHeight = '0';
+            });
+        };
+    </script>
+</body>
+</html>
